@@ -1,0 +1,24 @@
+Source: minikube
+Section: devel
+Priority: optional
+Maintainer: Wikimedia Foundation Release Engineering <releng@wikimedia.org>
+Uploaders: Tyler Cipriani <tcipriani@wikimedia.org>
+Build-Depends: debhelper (>= 10),
+               dh-golang,
+               golang-any (>= 1.8),
+               libgpgme-dev,
+               libvirt-dev,
+               go-bindata,
+               pkg-config,
+               ca-certificates,
+Standards-Version: 4.1.1
+Homepage: https://github.com/kubernetes/minikube
+XS-Go-Import-Path: k8s.io/minikube
+Testsuite: autopkgtest-pkg-go
+
+Package: minikube
+Architecture: any
+Built-Using: ${misc:Built-Using}
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: Run Kubernetes locally

@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+PACKAGE := k8s.io/minikube
+GO_LDFLAGS := $(shell /usr/bin/python hack/get_k8s_version.py 2>&1)
+
+# Ensure vendor directories are not included in test or build for golang <= 1.8
+# Exclude hyperkit as this will never be run on osx
+export DH_GOLANG_EXCLUDES := $(PACKAGE)/vendor/.* hyperkit
+
+pkg/minikube/assets/assets.go:
+	go-bindata -nomemcopy -o pkg/minikube/assets/assets.go -pkg assets deploy/addons/...
+
+%: pkg/minikube/assets/assets.go
+	dh $@ --buildsystem=golang --with=golang
+
+override_dh_auto_build:
+	dh_auto_build -O--buildsystem=golang -- -ldflags "$(GO_LDFLAGS)"
