@@ -1,7 +1,18 @@
 #!/usr/bin/make -f
 
-PACKAGE := k8s.io/minikube
-GO_LDFLAGS := $(shell /usr/bin/python hack/get_k8s_version.py 2>&1)
+# Bump these on release
+VERSION_MAJOR ?= 0
+VERSION_MINOR ?= 24
+VERSION_BUILD ?= 1
+VERSION ?= v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUILD)
+
+ISO_VERSION ?= v0.23.6
+ISO_BUCKET ?= minikube/iso
+
+PACKAGE := k8s.io/minikube/cmd/minikube
+MINIKUBE_LDFLAGS := -X k8s.io/minikube/pkg/version.version=$(VERSION) -X k8s.io/minikube/pkg/version.isoVersion=$(ISO_VERSION) -X k8s.io/minikube/pkg/version.isoPath=$(ISO_BUCKET)
+K8S_VERSION_LDFLAGS := $(shell /usr/bin/python hack/get_k8s_version.py 2>&1)
+GO_LDFLAGS := $(MINIKUBE_LDFLAGS) $(K8S_VERSION_LDFLAGS)
 
 # Ensure vendor directories are not included in test or build for golang <= 1.8
 # Exclude hyperkit as this will never be run on osx
