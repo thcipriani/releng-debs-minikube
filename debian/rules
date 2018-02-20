@@ -9,7 +9,8 @@ VERSION ?= v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUILD)
 ISO_VERSION ?= v0.23.6
 ISO_BUCKET ?= minikube/iso
 
-PACKAGE := k8s.io/minikube/cmd/minikube
+ROOT := k8s.io/minikube
+PACKAGE := $(ROOT)/cmd/minikube
 MINIKUBE_LDFLAGS := -X k8s.io/minikube/pkg/version.version=$(VERSION) -X k8s.io/minikube/pkg/version.isoVersion=$(ISO_VERSION) -X k8s.io/minikube/pkg/version.isoPath=$(ISO_BUCKET)
 
 # To update this run: python hack/get_k8s_version.py
@@ -20,7 +21,7 @@ GO_LDFLAGS := $(MINIKUBE_LDFLAGS) $(K8S_VERSION_LDFLAGS)
 
 # Ensure vendor directories are not included in test or build for golang <= 1.8
 # Exclude hyperkit as this will never be run on osx
-export DH_GOLANG_EXCLUDES := $(PACKAGE)/vendor/.* hyperkit
+export DH_GOLANG_EXCLUDES := $(ROOT)/vendor/.* hyperkit
 
 pkg/minikube/assets/assets.go:
 	go-bindata -nomemcopy -o pkg/minikube/assets/assets.go -pkg assets deploy/addons/...
