@@ -10,7 +10,6 @@ Build-Depends: debhelper (>= 10),
                libvirt-dev,
                go-bindata,
                pkg-config,
-               ca-certificates,
 Standards-Version: 4.1.1
 Homepage: https://github.com/kubernetes/minikube
 XS-Go-Import-Path: k8s.io/minikube
