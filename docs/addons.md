@@ -3,17 +3,18 @@
 Minikube has a set of built in addons that can be used enabled, disabled, and opened inside of the local k8s environment. Below is an example of this functionality for the `heapster` addon:
 ```shell
 $ minikube addons list
-- storage-provisioner: enabled
 - kube-dns: enabled
 - registry: disabled
 - registry-creds: disabled
+- freshpod: disabled
 - addon-manager: enabled
-- dashboard: disabled
-- default-storageclass: enabled
+- dashboard: enabled
 - coredns: disabled
 - heapster: disabled
 - efk: disabled
 - ingress: disabled
+- default-storageclass: enabled
+- storage-provisioner: enabled
 
 # minikube must be running for these commands to take effect
 $ minikube addons enable heapster
@@ -30,10 +31,11 @@ The currently supported addons include:
 * [Kube-dns](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns)
 * [Heapster](https://github.com/kubernetes/heapster): [Troubleshooting Guide](https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md) Note:You will need to login to Grafana as admin/admin in order to access the console
 * [EFK](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch)
-* [Registry](https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/registry)
+* [Registry](https://github.com/kubernetes/minikube/tree/master/deploy/addons/registry)
 * [Registry Credentials](https://github.com/upmc-enterprises/registry-creds)
 * [CoreDNS](https://github.com/coredns/deployment/tree/master/kubernetes)
 * [Ingress](https://github.com/kubernetes/ingress-nginx)
+* [Freshpod](https://github.com/GoogleCloudPlatform/freshpod)
 
 If you would like to have minikube properly start/restart custom addons, place the addon(s) you wish to be launched with minikube in the `.minikube/addons` directory. Addons in this folder will be moved to the minikube VM and launched each time minikube is started/restarted.
 

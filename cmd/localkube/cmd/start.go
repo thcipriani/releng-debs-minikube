@@ -46,7 +46,10 @@ func StartLocalkube() {
 		os.Exit(0)
 	}
 
-	// TODO: Require root
+	if os.Geteuid() != 0 {
+		fmt.Println("localkube should run as root!")
+		os.Exit(1)
+	}
 
 	SetupServer(Server)
 	Server.StartAll()
@@ -64,13 +67,13 @@ func SetupServer(s *localkube.LocalkubeServer) {
 	if s.ContainerRuntime == "remote" && s.RemoteRuntimeEndpoint == "" {
 		panic("Failed to connect to --container-runtime='remote' with no --container-runtime-endpoint")
 	}
-	// localkube flags can handle `--container-runtime=remote --remote-runtime-endpoint=/var/run/crio.sock --remote-image-endpoint=/var/run/crio.sock`,
+	// localkube flags can handle `--container-runtime=remote --remote-runtime-endpoint=/var/run/crio/crio.sock --remote-image-endpoint=/var/run/crio/crio.sock`,
 	// but this allows for a convenience of just e.g.`--container-runtime=crio` and the same for minikube
 	switch s.ContainerRuntime {
 	case "crio", "cri-o":
 		s.ContainerRuntime = "remote"
-		s.RemoteRuntimeEndpoint = "unix:///var/run/crio.sock"
-		s.RemoteImageEndpoint = "unix:///var/run/crio.sock"
+		s.RemoteRuntimeEndpoint = "unix:///var/run/crio/crio.sock"
+		s.RemoteImageEndpoint = "unix:///var/run/crio/crio.sock"
 	}
 
 	if s.ShouldGenerateCerts {

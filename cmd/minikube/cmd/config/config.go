@@ -113,6 +113,10 @@ var settings = []Setting{
 		set:  SetBool,
 	},
 	{
+		name: config.WantNoneDriverWarning,
+		set:  SetBool,
+	},
+	{
 		name: config.MachineProfile,
 		set:  SetString,
 	},
@@ -181,10 +185,22 @@ var settings = []Setting{
 		callbacks:   []setFn{EnableOrDisableAddon},
 	},
 	{
+		name:        "freshpod",
+		set:         SetBool,
+		validations: []setFn{IsValidAddon},
+		callbacks:   []setFn{EnableOrDisableAddon},
+	},
+	{
 		name:        "default-storageclass",
 		set:         SetBool,
 		validations: []setFn{IsValidAddon},
 		callbacks:   []setFn{EnableOrDisableDefaultStorageClass},
+	},
+	{
+		name:        "storage-provisioner",
+		set:         SetBool,
+		validations: []setFn{IsValidAddon},
+		callbacks:   []setFn{EnableOrDisableAddon},
 	},
 	{
 		name: "hyperv-virtual-switch",
@@ -217,6 +233,21 @@ func configurableFields() string {
 		fields = append(fields, " * "+s.name)
 	}
 	return strings.Join(fields, "\n")
+}
+
+// ListConfigMap list entries from config file
+func ListConfigMap(name string) ([]string, error) {
+	configFile, err := config.ReadConfig()
+	if err != nil {
+		return nil, err
+	}
+	var images []string
+	if values, ok := configFile[name].(map[string]interface{}); ok {
+		for key := range values {
+			images = append(images, key)
+		}
+	}
+	return images, nil
 }
 
 // AddToConfigMap adds entries to a map in the config file

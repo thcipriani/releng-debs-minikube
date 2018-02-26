@@ -14,20 +14,22 @@
 
 # Bump these on release
 VERSION_MAJOR ?= 0
-VERSION_MINOR ?= 24
-VERSION_BUILD ?= 1
+VERSION_MINOR ?= 25
+VERSION_BUILD ?= 0
 VERSION ?= v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUILD)
 DEB_VERSION ?= $(VERSION_MAJOR).$(VERSION_MINOR)-$(VERSION_BUILD)
 INSTALL_SIZE ?= $(shell du out/minikube-windows-amd64.exe | cut -f1)
-BUILDROOT_BRANCH ?= 2017.02
+BUILDROOT_BRANCH ?= 2017.11
 REGISTRY?=gcr.io/k8s-minikube
 
 HYPERKIT_BUILD_IMAGE 	?= karalabe/xgo-1.8.3
-BUILD_IMAGE 	?= gcr.io/google_containers/kube-cross:v1.9.1-1
+BUILD_IMAGE 	?= k8s.gcr.io/kube-cross:v1.9.1-1
 ISO_BUILD_IMAGE ?= $(REGISTRY)/buildroot-image
 
-ISO_VERSION ?= v0.23.6
+ISO_VERSION ?= v0.25.1
 ISO_BUCKET ?= minikube/iso
+
+KERNEL_VERSION ?= 4.9.64
 
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
@@ -62,6 +64,7 @@ KVM_DRIVER_FILES := $(shell go list -f '{{join .Deps "\n"}}' ./cmd/drivers/kvm/ 
 
 MINIKUBE_BUILD_TAGS := container_image_ostree_stub containers_image_openpgp
 MINIKUBE_INTEGRATION_BUILD_TAGS := integration $(MINIKUBE_BUILD_TAGS)
+SOURCE_DIRS = cmd pkg test
 
 # $(call DOCKER, image, command)
 define DOCKER
@@ -131,7 +134,7 @@ minikube_iso: # old target kept for making tests happy
 linux-menuconfig:
 	$(MAKE) -C $(BUILD_DIR)/buildroot linux-menuconfig
 	$(MAKE) -C $(BUILD_DIR)/buildroot linux-savedefconfig
-	cp $(BUILD_DIR)/buildroot/output/build/linux-4.9.13/defconfig deploy/iso/minikube-iso/board/coreos/minikube/linux-4.9_defconfig
+	cp $(BUILD_DIR)/buildroot/output/build/linux-$(KERNEL_VERSION)/defconfig deploy/iso/minikube-iso/board/coreos/minikube/linux-4.9_defconfig
 
 out/minikube.iso: $(shell find deploy/iso/minikube-iso -type f)
 ifeq ($(IN_DOCKER),1)
@@ -210,6 +213,10 @@ clean:
 
 .PHONY: gendocs
 gendocs: out/docs/minikube.md
+
+.PHONY: fmt
+fmt:
+	@gofmt -l -s -w $(SOURCE_DIRS)
 
 out/docs/minikube.md: $(shell find cmd) $(shell find pkg/minikube/constants) pkg/minikube/assets/assets.go
 	cd $(GOPATH)/src/$(REPOPATH) && go run -ldflags="$(K8S_VERSION_LDFLAGS) $(MINIKUBE_LDFLAGS)" -tags gendocs hack/gen_help_text.go

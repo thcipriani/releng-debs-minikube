@@ -65,9 +65,9 @@ var Addons = map[string]*Addon{
 	}, true, "addon-manager"),
 	"dashboard": NewAddon([]*BinDataAsset{
 		NewBinDataAsset(
-			"deploy/addons/dashboard/dashboard-rc.yaml",
+			"deploy/addons/dashboard/dashboard-dp.yaml",
 			constants.AddonsPath,
-			"dashboard-rc.yaml",
+			"dashboard-dp.yaml",
 			"0640"),
 		NewBinDataAsset(
 			"deploy/addons/dashboard/dashboard-svc.yaml",
@@ -233,6 +233,13 @@ var Addons = map[string]*Addon{
 			"registry-creds-rc.yaml",
 			"0640"),
 	}, false, "registry-creds"),
+	"freshpod": NewAddon([]*BinDataAsset{
+		NewBinDataAsset(
+			"deploy/addons/freshpod/freshpod-rc.yaml",
+			constants.AddonsPath,
+			"freshpod-rc.yaml",
+			"0640"),
+	}, false, "freshpod"),
 }
 
 func AddMinikubeDirAssets(assets *[]CopyableFile) error {

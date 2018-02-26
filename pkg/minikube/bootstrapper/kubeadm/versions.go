@@ -174,6 +174,7 @@ var versionSpecificOpts = []VersionedExtraOption{
 	NewUnversionedOption(Kubelet, "kubeconfig", "/etc/kubernetes/kubelet.conf"),
 	NewUnversionedOption(Kubelet, "bootstrap-kubeconfig", "/etc/kubernetes/bootstrap-kubelet.conf"),
 	NewUnversionedOption(Kubelet, "require-kubeconfig", "true"),
+	NewUnversionedOption(Kubelet, "hostname-override", "minikube"),
 
 	// System pods args
 	NewUnversionedOption(Kubelet, "pod-manifest-path", "/etc/kubernetes/manifests"),
@@ -190,6 +191,14 @@ var versionSpecificOpts = []VersionedExtraOption{
 	// Cgroup args
 	NewUnversionedOption(Kubelet, "cadvisor-port", "0"),
 	NewUnversionedOption(Kubelet, "cgroup-driver", "cgroupfs"),
+	{
+		Option: util.ExtraOption{
+			Component: Apiserver,
+			Key:       "admission-control",
+			Value:     strings.Join(util.DefaultAdmissionControllers, ","),
+		},
+		GreaterThanOrEqual: semver.MustParse("1.9.0-alpha.0"),
+	},
 }
 
 func VersionIsBetween(version, gte, lte semver.Version) bool {

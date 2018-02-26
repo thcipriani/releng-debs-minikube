@@ -19,6 +19,7 @@ package main
 import (
 	"os"
 
+	"github.com/golang/glog"
 	"github.com/pkg/profile"
 	"k8s.io/minikube/cmd/minikube/cmd"
 	"k8s.io/minikube/pkg/minikube/constants"
@@ -26,10 +27,12 @@ import (
 	_ "k8s.io/minikube/pkg/provision"
 )
 
-const minikubeEnvPrefix = "MINIKUBE_ENABLE_PROFILING"
+const minikubeEnableProfile = "MINIKUBE_ENABLE_PROFILING"
 
 func main() {
-	if os.Getenv(minikubeEnvPrefix) == "1" {
+	defer glog.Flush()
+
+	if os.Getenv(minikubeEnableProfile) == "1" {
 		defer profile.Start(profile.TraceProfile).Stop()
 	}
 	if os.Getenv(constants.IsMinikubeChildProcess) == "" {

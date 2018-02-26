@@ -33,7 +33,7 @@ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/miniku
 ### Windows
 Download the [minikube-windows-amd64.exe](https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe) file, rename it to `minikube.exe` and add it to your path.
 
-### Linux Continuous Integration with VM Support
+### Linux Continuous Integration without VM Support
 Example with kubectl installation:
 ```shell
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
@@ -92,10 +92,11 @@ the following drivers:
 
 * virtualbox
 * vmwarefusion
-* [KVM](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm-driver)
+* [KVM2](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm2-driver)
+* [KVM (deprecated in favor of KVM2)](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm-driver)
 * [hyperkit](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperkit-driver)
 * [xhyve](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#xhyve-driver)
-* [Hyper-V](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperV-driver)
+* [hyperv](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperV-driver)
 * none (**Linux-only**) - this driver can be used to run the Kubernetes cluster components on the host instead of in a VM. This can be useful for CI workloads which do not support nested virtualization.
 
 ```shell
@@ -109,7 +110,7 @@ Connecting to cluster...
 Setting up kubeconfig...
 Kubectl is now configured to use the cluster.
 
-$ kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
+$ kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.4 --port=8080
 deployment "hello-minikube" created
 $ kubectl expose deployment hello-minikube --type=NodePort
 service "hello-minikube" exposed
@@ -131,6 +132,8 @@ client_address=192.168.99.1
 command=GET
 real path=/
 ...
+$ kubectl delete service hello-minikube
+service "hello-minikube" deleted
 $ kubectl delete deployment hello-minikube
 deployment "hello-minikube" deleted
 $ minikube stop
@@ -142,7 +145,7 @@ Machine stopped.
 
 ### kubectl
 
-The `minikube start` command creates a "[kubectl context](https://kubernetes.io/docs/user-guide/kubectl/v1.7/#-em-set-context-em-)" called "minikube".
+The `minikube start` command creates a "[kubectl context](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-set-context-em-)" called "minikube".
 This context contains the configuration to communicate with your Minikube cluster.
 
 Minikube sets this context to default automatically, but if you need to switch back to it in the future, run:
@@ -167,7 +170,7 @@ minikube service [-n NAMESPACE] [--url] NAME
 
 ## Design
 
-Minikube uses [libmachine](https://github.com/docker/machine/tree/master/libmachine) for provisioning VMs, and [localkube](https://github.com/kubernetes/minikube/tree/master/pkg/localkube) (originally written and donated to this project by [Redspread](https://redspread.com/)) for running the cluster.
+Minikube uses [libmachine](https://github.com/docker/machine/tree/master/libmachine) for provisioning VMs, and [localkube](https://github.com/kubernetes/minikube/tree/master/pkg/localkube) (originally written and donated to this project by Redspread) for running the cluster.
 
 For more information about Minikube, see the [proposal](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/cluster-lifecycle/local-cluster-ux.md).
 
@@ -180,5 +183,5 @@ For more information about Minikube, see the [proposal](https://github.com/kuber
 ## Community
 
 * [**#minikube on Kubernetes Slack**](https://kubernetes.slack.com)
-* [**kubernetes-dev mailing list** ](https://groups.google.com/forum/#!forum/kubernetes-dev)
+* [**kubernetes-users mailing list** ](https://groups.google.com/forum/#!forum/kubernetes-users)
 (If you are posting to the list, please prefix your subject with "minikube: ")
