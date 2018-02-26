@@ -2,11 +2,11 @@
 
 # Bump these on release
 VERSION_MAJOR ?= 0
-VERSION_MINOR ?= 24
-VERSION_BUILD ?= 1
+VERSION_MINOR ?= 25
+VERSION_BUILD ?= 0
 VERSION ?= v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUILD)
 
-ISO_VERSION ?= v0.23.6
+ISO_VERSION ?= v0.25.1
 ISO_BUCKET ?= minikube/iso
 
 ROOT := k8s.io/minikube
@@ -15,8 +15,8 @@ MINIKUBE_LDFLAGS := -X k8s.io/minikube/pkg/version.version=$(VERSION) -X k8s.io/
 
 # To update this run: python hack/get_k8s_version.py
 # Run this outside the build since dh_buildpackage creates a builddir with no .git
-DATE := $(shell date +'%FT%TZ%Z')
-K8S_VERSION_LDFLAGS := -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitCommit=0b9efaeb34a2fc51ff8e4d34ad9bc6375459c4a4 -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitVersion=v1.8.0 -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitTreeState=clean -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.buildDate=$(DATE) -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitCommit=0b9efaeb34a2fc51ff8e4d34ad9bc6375459c4a4 -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitVersion=v1.8.0 -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitTreeState=clean -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.buildDate=$(DATE)
+DATE := $(shell date +'%FT%TZ')
+K8S_VERSION_LDFLAGS := -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitCommit=925c127ec6b946659ad0fd596fa959be43f0cc05 -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitTreeState=clean -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitVersion=v1.9.0 -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitMajor=1 -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.gitMinor=9 -X k8s.io/minikube/vendor/k8s.io/kubernetes/pkg/version.buildDate=$(DATE) -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitCommit=925c127ec6b946659ad0fd596fa959be43f0cc05 -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitTreeState=clean -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitVersion=v1.9.0 -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitMajor=1 -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.gitMinor=9 -X k8s.io/minikube/vendor/k8s.io/client-go/pkg/version.buildDate=$(DATE)
 GO_LDFLAGS := $(MINIKUBE_LDFLAGS) $(K8S_VERSION_LDFLAGS)
 
 # Ensure vendor directories are not included in test or build for golang <= 1.8
